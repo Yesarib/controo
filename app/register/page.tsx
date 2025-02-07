@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-async-client-component */
+'use client'
 import {
     Card,
     CardHeader,
@@ -8,25 +10,83 @@ import {
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 // import { OAuthButtons } from "./oauth-signin";
 import { signup } from "./action";
 import Link from "next/link"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
-export default async function Login({
-}: {
-    searchParams: { message: string };
-}) {
-    const supabase = await createClient();
+export default function Login({ }: { searchParams: { message: string }; }) {
+    const router = useRouter()
 
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
+    const supabase = createClient();
 
-    if (user) {
-        return redirect("/todos");
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: ''
+    })
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        })
     }
+
+    const handleRegister = async () => {
+        try {
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email: formData.email,
+                password: formData.password,
+                options: {
+                    data: {
+                        name: formData.name 
+                    }
+                }
+            })
+            console.log(authData);
+
+            if (authError) throw authError;
+
+            // Email doğrulaması için yönlendirme
+            // router.push('/verify-email') // Bu sayfayı oluşturmanız gerekecek
+        } catch (error) {
+            console.error('Registration error:', error)
+        }
+    }
+
+    useEffect(() => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+            if (event === 'SIGNED_IN' && session?.user) {
+                try {
+                    // User meta datasından name bilgisini al
+                    const name = session.user.user_metadata.name
+
+                    const { error: profileError } = await supabase
+                        .from('user_profiles')
+                        .insert([
+                            {
+                                authId: session.user.id,
+                                fullname: name
+                            }
+                        ])
+
+                    if (profileError) throw profileError;
+
+                    router.push('/dashboard')
+                } catch (error) {
+                    console.error('Profile creation error:', error)
+                }
+            }
+        })
+
+        // Cleanup subscription
+        return () => {
+            subscription.unsubscribe()
+        }
+    }, [])
 
     return (
         <section className="h-[calc(100vh-57px)] flex justify-center items-center">
@@ -46,6 +106,8 @@ export default async function Login({
                                 name="name"
                                 type="text"
                                 placeholder="John Doe"
+                                value={formData.name}
+                                onChange={handleChange}
                                 required
                             />
                         </div>
@@ -56,6 +118,8 @@ export default async function Login({
                                 name="email"
                                 type="email"
                                 placeholder="m@example.com"
+                                value={formData.email}
+                                onChange={handleChange}
                                 required
                             />
                         </div>
@@ -68,6 +132,8 @@ export default async function Login({
                                 name="password"
                                 id="password"
                                 type="password"
+                                value={formData.password}
+                                onChange={handleChange}
                                 required
                             />
                         </div>
@@ -78,7 +144,7 @@ export default async function Login({
                     { /* <OAuthButtons /> */}
                     <div className="text-center text-sm">
                         Already have an account?{" "}
-                        <Link href="/login" className="underline hover:text-primary">
+                        <Link onClick={handleRegister} href="/login" className="underline hover:text-primary">
                             Login
                         </Link>
                     </div>
