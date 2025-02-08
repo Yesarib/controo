@@ -1,6 +1,6 @@
 import { GeistSans } from "geist/font/sans";
-import Header from "@/components/header";
 import "./globals.css";
+import { UserProvider } from "@/context/user-context";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -18,10 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={GeistSans.variable}>
+    <html lang="en" suppressHydrationWarning className={GeistSans.variable}>
       <body className="sticky top-0 bg-background text-foreground">
-        <Header />
-        <main className="flex flex-col items-center">{children}</main>
+        <UserProvider>
+          <main className="flex flex-col items-center">{children}</main>
+        </UserProvider>
       </body>
     </html>
   );

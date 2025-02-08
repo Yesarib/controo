@@ -1,5 +1,6 @@
 
-import { signOut } from "@/app/login/action";
+
+import { signOut } from "@/app/(home)/login/action";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
