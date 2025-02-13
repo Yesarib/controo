@@ -18,19 +18,24 @@ export async function getUserChats(userId: string) {
         return [];
     }
 
-    return data ?? [];
+    return data;
 };
 
 export async function newChat(userId: string, title: string) {
     const supabase = await createClient();
 
-    const { error } = await supabase.from('chats')
-        .insert({ user_id: userId, title: title });
+    const { data, error } = await supabase.from('chats')
+        .insert({ user_id: userId, title: title }).select();
 
     if (error) {
         console.error('Error creating chat:', error);
     }
-
+    
+    if (!data) {
+        return null
+    }
+    
+    return data[0];
 };
 
 export async function deleteChat(chatId: string) {

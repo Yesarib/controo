@@ -1,9 +1,12 @@
 'use client'
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Typography, List, ListItem, Divider, Button } from '@mui/material';
+import { Box, Typography, Divider, Button } from '@mui/material';
 import { getUserChats } from '@/app/dashboard/supabase/chat';
 import { useUser } from '@/hooks/use-user';
+// import { format } from 'date-fns';
+import { Add, MoreVert } from '@mui/icons-material';
+import Link from 'next/link';
 
 interface Chat {
     id: string;
@@ -14,8 +17,8 @@ interface Chat {
 
 export function Sidebar() {
     const { userId } = useUser();
-    console.log(userId);
-    
+    // console.log(userId);
+
     const [chats, setChats] = useState<Chat[]>([]);
 
     const getChats = useCallback(async () => {
@@ -40,80 +43,81 @@ export function Sidebar() {
     }, [getChats]);
 
     return (
-        <Box
-            className="p-4"
-            sx={{
-                width: 250,
-                backgroundColor: '#2A2D36',
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100vh',  // Sidebar'ın yüksekliğini %100 yapıyoruz
-            }}
-        >
-            <div className='flex justify-center items-center w-full'>
-                <Button
-                    fullWidth
-                    sx={{
-                        textTransform: 'capitalize',
-                        border: '1px solid #333',
-                        borderRadius: '12px',
-                        color: 'white',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        textAlign: 'center',
-                    }}
-                >
-                    <Typography variant="body1" gutterBottom sx={{ color: 'white', mt: 1 }}>
-                        New Content
+        <div>
+            <Box
+                className="p-4"
+                sx={{
+                    width: 250,
+                    backgroundColor: '#2A2D36',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100vh',  // Sidebar'ın yüksekliğini %100 yapıyoruz
+                }}
+            >
+                <div>
+                    <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
+                        Contro
                     </Typography>
-                </Button>
-            </div>
+                </div>
+                <div className='flex items-center w-full mt-8'>
+                    <Button
+                        fullWidth
+                        sx={{
+                            textTransform: 'capitalize',
+                            borderRadius: '12px',
+                            color: 'white',
+                            display: 'flex',
+                            justifyContent: 'start',
+                            alignItems: 'center',
+                            textAlign: 'center',
+                        }}
+                    >
+                        <Add sx={{ mr: 1 }} fontSize='small' />
+                        <Link href={'/dashboard'}>
+                            <Typography variant="body2" gutterBottom sx={{ color: 'white', mt: 1 }}>
+                                New Content
+                            </Typography>
+                        </Link>
+                    </Button>
+                </div>
 
-            <Divider sx={{ my: 2, backgroundColor: 'gray' }} />
+                <Divider sx={{ my: 2, backgroundColor: 'gray' }} />
 
-            <div className='mt-8'>
-                <Typography variant="body1" sx={{ color: 'white', fontWeight: 'bold' }}>
-                    Today
-                </Typography>
-                <List sx={{ padding: 0 }}>
-                    {chats.map((chat) => (
-                        <ListItem key={chat.id} sx={{ color: 'white' }}>
-                            <Typography variant="body2">{chat.title}</Typography>
-                        </ListItem>
-                    ))}
-                </List>
+                <div className='mt-8'>
+                    <Typography variant="body1" sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'Lato, sans-serif', }}>
+                        Today
+                    </Typography>
+                    <Box sx={{
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 1,
+                        mt: 1
+                    }}>
+                        {chats.map((chat) => (
+                            <Link key={chat.id} className='group w-full flex justify-between items-center p-2 text-white bg-gray-400 rounded-md
+                            hover:bg-gray-600 transition duration-300 ease-in-out
+                            ' href={`/dashboard/chat/${chat.id}`}>
+                                <Typography variant="body2" sx={{
+                                    fontFamily: 'Lato, sans-serif',
+                                }}>{chat.title}</Typography>
+                                <button className='hidden group-hover:block'>
+                                    <MoreVert sx={{ height: '20px' }} />
+                                </button>
+                            </Link>
+                        ))}
 
-                <Typography variant="body1" sx={{ color: 'white', fontWeight: 'bold', mt: 2 }}>
-                    Last 7 Days
-                </Typography>
-                <List sx={{ padding: 0 }}>
-                    {chats.map((chat) => (
-                        <ListItem key={chat.id} sx={{ color: 'white' }}>
-                            <Typography variant="body2">{chat.title}</Typography>
-                        </ListItem>
-                    ))}
-                </List>
+                    </Box>
+                </div>
 
-                <Typography variant="body1" sx={{ color: 'white', fontWeight: 'bold', mt: 2 }}>
-                    Last 30 Days
-                </Typography>
-                <List sx={{ padding: 0 }}>
-                    {chats.map((chat) => (
-                        <ListItem key={chat.id} sx={{ color: 'white' }}>
-                            <Typography variant="body2">{chat.title}</Typography>
-                        </ListItem>
-                    ))}
-                </List>
-            </div>
+                <Divider sx={{ my: 2, backgroundColor: 'gray' }} />
 
-            <Divider sx={{ my: 2, backgroundColor: 'gray' }} />
-
-            <div style={{ marginTop: 'auto' }}>
-                <Typography variant="body2" color="gray" sx={{ textAlign: 'center' }}>
-                    Settings
-                </Typography>
-            </div>
-        </Box>
+                <div style={{ marginTop: 'auto' }}>
+                    <Typography variant="body2" color="gray" sx={{ textAlign: 'center' }}>
+                        Settings
+                    </Typography>
+                </div>
+            </Box>
+        </div>
     );
 }
