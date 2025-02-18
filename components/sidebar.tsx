@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Typography, Divider, Button } from '@mui/material';
-import { getUserChats } from '@/app/dashboard/supabase/chat';
+import { Box, Typography, Divider, Button, IconButton, Menu, MenuItem } from '@mui/material';
+import { deleteChat, getUserChats } from '@/app/dashboard/supabase/chat';
 import { useUser } from '@/hooks/use-user';
 // import { format } from 'date-fns';
 import { Add, MoreVert } from '@mui/icons-material';
 import Link from 'next/link';
+import { deleteMessagesByChatId } from '@/app/dashboard/supabase/message';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { useParams, useRouter } from 'next/navigation';
 
 interface Chat {
     id: string;
@@ -17,9 +21,12 @@ interface Chat {
 
 export function Sidebar() {
     const { userId } = useUser();
-    // console.log(userId);
-
     const [chats, setChats] = useState<Chat[]>([]);
+    const [anchorEl, setAnchorEl] = useState<EventTarget & HTMLDivElement | null>(null);
+    const [selectedChatId, setSelectedChatId] = useState("");
+    const router = useRouter();
+    const params = useParams();
+    const chatId = params.chatId;
 
     const getChats = useCallback(async () => {
         if (!userId) {
@@ -35,12 +42,37 @@ export function Sidebar() {
             return;
         }
 
-        setChats(response);
+        setChats(response as Chat[]);
     }, [userId]);
 
     useEffect(() => {
         getChats();
-    }, [getChats]);
+    }, [chatId]);
+
+    const handleMenuOpen = (event: any, chatId: string) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedChatId(chatId);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+        setSelectedChatId("");
+    };
+
+    const handleDelete = async () => {
+        if (selectedChatId) {
+            await deleteChat(selectedChatId);
+            await deleteMessagesByChatId(selectedChatId);
+        }
+        handleMenuClose();
+        if (chatId === selectedChatId) {
+            router.push('/dashboard');
+        }
+        getChats();
+
+    };
+
+
 
     return (
         <div>
@@ -51,7 +83,7 @@ export function Sidebar() {
                     backgroundColor: '#2A2D36',
                     display: 'flex',
                     flexDirection: 'column',
-                    height: '100vh',  // Sidebar'ın yüksekliğini %100 yapıyoruz
+                    height: '100vh',
                 }}
             >
                 <div>
@@ -95,20 +127,36 @@ export function Sidebar() {
                         mt: 1
                     }}>
                         {chats.map((chat) => (
-                            <Link key={chat.id} className='group w-full flex justify-between items-center p-2 text-white bg-gray-400 rounded-md
-                            hover:bg-gray-600 transition duration-300 ease-in-out
-                            ' href={`/dashboard/chat/${chat.id}`}>
+                            <Link key={chat.id} className='group w-full flex justify-between items-center p-2 text-white bg-[#404150] rounded-md
+                            hover:bg-gray-600 transition duration-300 ease-in-out'
+                                href={`/dashboard/chat/${chat.id}`}
+                            >
                                 <Typography variant="body2" sx={{
                                     fontFamily: 'Lato, sans-serif',
-                                }}>{chat.title}</Typography>
-                                <button className='hidden group-hover:block'>
-                                    <MoreVert sx={{ height: '20px' }} />
-                                </button>
+                                }}>
+                                    {chat.title}
+                                </Typography>
+                                <IconButton
+                                    onClick={(e) => handleMenuOpen(e, chat.id)}
+                                >
+                                    <MoreVert sx={{ height: '20px', color: 'white' }} />
+                                </IconButton>
                             </Link>
                         ))}
 
                     </Box>
                 </div>
+
+                <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleMenuClose}
+                >
+                    <MenuItem onClick={handleDelete} sx={{ display: 'flex', width: '100%', height: '100%', color: 'red', alignItems: 'center', }}>
+                        <DeleteForeverIcon />
+                        <Typography variant="body2" sx={{ mt: 0.5 }}>Delete</Typography>
+                    </MenuItem>
+                </Menu>
 
                 <Divider sx={{ my: 2, backgroundColor: 'gray' }} />
 

@@ -13,7 +13,15 @@ export async function POST(req: NextRequest) {
                 },
                 method: "POST",
                 body: JSON.stringify({
-                    inputs: `A content creator is sharing a fun and engaging sponsored post about sunglasses with their followers. The post should feel natural, personal, and conversational—like a genuine recommendation rather than a direct advertisement. It should reflect the creator’s excitement about the partnership and their own experience with the product. Encourage engagement by asking followers a question, sharing a personal anecdote, or inviting them to interact (e.g., tagging a friend or commenting). If a discount code is included, mention it in a casual and inviting way. Use an upbeat and engaging tone, making the post feel authentic and not overly sales-focused. Now, generate a compelling social media post based on the following user input: ${user_input}.`
+                    inputs: `You are a content creator known for crafting engaging, authentic, and high-quality promotional content. Your task is to generate a compelling and natural-sounding social media post that highlights the product’s features while making it feel like a genuine recommendation rather than an advertisement. 
+
+                    - Use a conversational and relatable tone.  
+                    - Incorporate storytelling elements, personal experiences, or playful engagement to capture the audience’s attention.  
+                    - If applicable, include a call to action that encourages interaction without sounding forced.  
+
+                    Now, based on the following user request, generate a **fully written** social media post rather than just giving tips:  
+
+                    User request: "${user_input}"`
                 }),
             }
         );
@@ -33,7 +41,7 @@ export async function POST(req: NextRequest) {
 
         // After reading the stream, you can parse the result
         const data = JSON.parse(result);
-        // console.log(data);
+        console.log(data);
 
 
         return NextResponse.json(data);

@@ -5,16 +5,19 @@ import SendIcon from '@mui/icons-material/Send';
 
 type ContentInputProps = {
     setMessage: React.Dispatch<React.SetStateAction<string>>
-    handleSubmit: () => void
+    handleSubmit: () => void,
+    isNewMessage?: boolean
 }
 
-const ContentInput: React.FC<ContentInputProps> = ({ setMessage, handleSubmit }) =>  {
+const ContentInput: React.FC<ContentInputProps> = ({ setMessage, handleSubmit, isNewMessage = true }) => {
 
     return (
         <Box className="w-full p-6 flex flex-col justify-center items-center">
-            <Typography variant="h5" sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'bold', color: 'white' }}>
+            {isNewMessage ? <Typography variant="h5" sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'bold', color: 'white' }}>
                 What kind of content should we create today?
-            </Typography>
+            </Typography> : null
+            }
+
             <Box sx={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <TextField
                     multiline
@@ -23,24 +26,24 @@ const ContentInput: React.FC<ContentInputProps> = ({ setMessage, handleSubmit })
                     onChange={(e) => setMessage(e.target.value)}
                     sx={{
                         width: '50%',
-                        backgroundColor: '#2c2f36', // Daha açık renk
+                        backgroundColor: '#2c2f36',
                         mt: 2,
                         color: 'white',
                         borderRadius: '24px',
-                        paddingRight: '50px', // Buton için sağda boşluk bırakmak
+                        paddingRight: '50px',
                         '& .MuiOutlinedInput-root': {
-                            border: 'none', // Border'ı kaldır
+                            border: 'none',
                             '& fieldset': {
-                                border: 'none', // Border'ı tamamen kaldır
+                                border: 'none', 
                             },
                         },
                         '& .MuiInputBase-root': {
-                            boxShadow: 'none', // Shadow'ı kaldır
+                            boxShadow: 'none',
                         },
                         '& .MuiInputBase-input': {
-                            color: 'white', // Metin rengi beyaz
+                            color: 'white',
                             '&::placeholder': {
-                                color: 'white', // Placeholder rengi beyaz
+                                color: 'white',
                             },
                         },
                     }}
