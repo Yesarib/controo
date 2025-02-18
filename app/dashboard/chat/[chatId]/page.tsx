@@ -57,7 +57,7 @@ export default function ChatPage() {
     const data = await apiResponse.json();
     const generatedContent = data[0].generated_text;
 
-    const userRequestIndex = generatedContent.indexOf(`User request: ${message}`);
+    const userRequestIndex = generatedContent.indexOf(`User request: "${message}"`);
     const contentAfterUserInput = userRequestIndex !== -1 ? generatedContent.substring(userRequestIndex + `User request: ${message}`.length).trim() : generatedContent;
 
     await newMessage({ chat_id: chatId as string, user_id: userId, content: contentAfterUserInput, user_message: message });
