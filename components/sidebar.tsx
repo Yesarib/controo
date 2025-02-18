@@ -46,8 +46,10 @@ export function Sidebar() {
     }, [userId]);
 
     useEffect(() => {
-        getChats();
-    }, [chatId]);
+        if (userId) {
+            getChats();
+        }
+    }, [userId, chatId]);
 
     const handleMenuOpen = (event: any, chatId: string) => {
         setAnchorEl(event.currentTarget);
