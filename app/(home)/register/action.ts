@@ -36,7 +36,6 @@ export async function saveUser(userId: string, fullName: string) {
 export async function signup(email: string, password: string, fullName: string) {
     const supabase = await createClient()
 
-    // Kullanıcı kaydını başlatıyoruz
     const { data: authData, error } = await supabase.auth.signUp({ email, password })
 
     if (error) {
@@ -46,19 +45,17 @@ export async function signup(email: string, password: string, fullName: string) 
 
     console.log('Auth Data:', authData);
 
-    // Kullanıcıyı doğrulama işlemine kadar bekleyebiliriz, ancak bunu asenkron hale getirebiliriz.
     const user = authData?.user
 
     if (user) {
         console.log('User Found:', user);
-        // Kullanıcı kaydını gerçekleştiriyoruz, ancak doğrulama sonrası yapılacak işlemleri bekleyebiliriz
         await saveUser(user.id, fullName)
     } else {
         console.log('No user found in authData');
     }
 
-    // revalidatePath('/', 'layout')
-    // redirect('/login')
+    revalidatePath('/', 'layout')
+    redirect('/')
 }
 
 export async function signOut() {

@@ -14,10 +14,7 @@ import { createClient } from "@/utils/supabase/server";
 import { emailLogin } from "./action";
 import Link from "next/link"
 
-export default async function Login({
-}: {
-    searchParams: { message: string };
-}) {
+export default async function Login() {
     const supabase = await createClient();
 
     const {

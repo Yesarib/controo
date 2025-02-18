@@ -13,7 +13,7 @@ import { signup } from "./action";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function Login({ }: { searchParams: { message: string }; }) {
+export default function Register() {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
