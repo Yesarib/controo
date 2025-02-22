@@ -2,11 +2,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
-    let response = NextResponse.next({
-        request: {
-            headers: request.headers,
-        },
-    })
+    const response = NextResponse.next();
 
     const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,47 +10,20 @@ export async function updateSession(request: NextRequest) {
         {
             cookies: {
                 get(name: string) {
-                    return request.cookies.get(name)?.value
+                    return request.cookies.get(name)?.value;
                 },
                 set(name: string, value: string, options: CookieOptions) {
-                    request.cookies.set({
-                        name,
-                        value,
-                        ...options,
-                    })
-                    response = NextResponse.next({
-                        request: {
-                            headers: request.headers,
-                        },
-                    })
-                    response.cookies.set({
-                        name,
-                        value,
-                        ...options,
-                    })
+                    response.cookies.set(name, value, options);
                 },
                 remove(name: string, options: CookieOptions) {
-                    request.cookies.set({
-                        name,
-                        value: '',
-                        ...options,
-                    })
-                    response = NextResponse.next({
-                        request: {
-                            headers: request.headers,
-                        },
-                    })
-                    response.cookies.set({
-                        name,
-                        value: '',
-                        ...options,
-                    })
+                    response.cookies.set(name, '', { ...options, maxAge: -1 });
                 },
             },
         }
-    )
+    );
 
-    await supabase.auth.getUser()
+    // Kullanıcı oturumunu güncelle
+    await supabase.auth.getSession();
 
-    return response
+    return response;
 }

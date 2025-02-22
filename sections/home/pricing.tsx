@@ -30,7 +30,7 @@ const pricingPlans = [
     },
     {
         name: "Monthly",
-        price: 4.99,
+        price: 2.49,
         paymentTime: "month",
         limit: "Unlimited",
         features: [
@@ -52,11 +52,11 @@ const pricingPlans = [
         ]
     },
     {
-        name: "Annual",
-        price: 49.99,
+        name: "Yearly",
+        price: 24.00,
         paymentTime: "year",
         limit: "Unlimited",
-        discount: "Save 16.5%",
+        discount: "Save 20%",
         features: [
             {
                 title: "Content Generations",
@@ -85,7 +85,7 @@ export default function Pricing() {
             <div className="w-2/3 flex gap-8 mt-8 cursor-pointer">
                 {pricingPlans.map((plan, index) => {
 
-                    const isAnnual = plan.name === "Annual";
+                    const isAnnual = plan.name === "Yearly";
                     return (
                         <Card key={index} className={`border ${isAnnual ? "border-green-600 border-2" : "border-gray-400"} p-4 mt-4`}>
                             <CardHeader>

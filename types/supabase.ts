@@ -11,7 +11,7 @@ export type Database = {
     Tables: {
       user_profiles: {
         Row: {
-          authId: string
+          authid: string
           id: number
           fullname: string
           subscription_id: number | null
@@ -19,7 +19,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          authId: string
+          authid: string
           id?: number
           fullname: string
           subscription_id?: number | null
@@ -27,7 +27,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          authId?: string
+          authid?: string
           id?: number
           fullname?: string
           subscription_id?: number | null
@@ -156,6 +156,33 @@ export type Database = {
             referencedColumns: ["id"]
           }
         ]
+      },
+      subscriptions: {
+        Row: {
+          id: number
+          subscription_type: 'free' | 'monthly' | 'yearly'
+          price: number | null
+          usage_limit: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          subscription_type: 'free' | 'monthly' | 'yearly'
+          price?: number | null
+          usage_limit?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          subscription_type?: 'free' | 'monthly' | 'yearly'
+          price?: number | null
+          usage_limit?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {

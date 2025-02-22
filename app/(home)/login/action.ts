@@ -4,8 +4,6 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { createClient } from '@/utils/supabase/server'
-// import { Provider } from '@supabase/supabase-js'
-// import { getURL } from '@/utils/helpers'
 
 export async function emailLogin(formData: FormData) {
     const supabase = await createClient()
@@ -17,14 +15,20 @@ export async function emailLogin(formData: FormData) {
         password: formData.get('password') as string,
     }
 
-    const { error } = await supabase.auth.signInWithPassword(data)
+    const { error, data: user } = await supabase.auth.signInWithPassword(data)
 
     if (error) {
         redirect('/login?message=Could not authenticate user')
     }
 
-    revalidatePath('/', 'layout')
-    redirect('/')
+    const profile = await checkUser(user.user.id)
+
+    if (profile && profile.length > 0) {
+        revalidatePath('/', 'layout')
+        redirect('/dashboard')
+    } else {
+        redirect('/complete-profile')
+    }
 }
 
 
@@ -32,6 +36,19 @@ export async function signOut() {
     const supabase = await createClient();
     await supabase.auth.signOut();
     redirect('/')
+}
+
+export async function checkUser(userId: string) {
+    const supabase = await createClient();
+
+    const { data: user, error} = await supabase.from('user_profiles').select('*').eq('authId', userId);
+
+    if (error) {
+        console.error(error);
+        return null;
+    }
+
+    return user
 }
 
 /*

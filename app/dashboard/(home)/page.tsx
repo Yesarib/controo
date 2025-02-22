@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 export default function DashboardPage() {
   const { userId } = useUser();
   const router = useRouter();
-  const [generatedContent, setGeneratedContent] = useState('');
   const [message, setMessage] = useState('');
 
   const handleContent = async () => {
@@ -36,9 +35,13 @@ export default function DashboardPage() {
     }
 
     const data = await apiResponse.json();
-    setGeneratedContent(data[0].generated_text);
+    const generatedContent = data[0].generated_text;
 
-    await newMessage({ chat_id: newChatId, user_id: userId, content: data[0].generated_text, user_message: message });
+    const userRequestIndex = generatedContent.indexOf(`User request: "${message}"`);
+    const contentAfterUserInput = userRequestIndex !== -1 ? generatedContent.substring(userRequestIndex + `User request: ${message}`.length).trim() : generatedContent;
+
+
+    await newMessage({ chat_id: newChatId, user_id: userId, content: contentAfterUserInput, user_message: message });
 
     router.push(`/dashboard/chat/${newChatId}`);
   }

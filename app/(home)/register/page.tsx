@@ -15,7 +15,6 @@ import { useState } from "react";
 
 export default function Register() {
     const [formData, setFormData] = useState({
-        name: '',
         email: '',
         password: ''
     });
@@ -29,9 +28,8 @@ export default function Register() {
 
     const handleRegister = async () => {
         try {
-            await signup(formData.email, formData.password, formData.name);
+            await signup(formData.email, formData.password);
 
-            // Email doğrulaması için yönlendirme
         } catch (error) {
             console.error('Registration error:', error);
         }
@@ -47,19 +45,7 @@ export default function Register() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
-                    <form id="login-form" className="grid gap-4">
-                        <div className="grid gap-2">
-                            <Label htmlFor="name">Full Name</Label>
-                            <Input
-                                id="name"
-                                name="name"
-                                type="text"
-                                placeholder="John Doe"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
+                    <form id="login-form" className="grid gap-4">                        
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
@@ -80,6 +66,20 @@ export default function Register() {
                                 minLength={6}
                                 name="password"
                                 id="password"
+                                type="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <div className="flex items-center">
+                                <Label htmlFor="password">Re Password</Label>
+                            </div>
+                            <Input
+                                minLength={6}
+                                name="repassword"
+                                id="repassword"
                                 type="password"
                                 value={formData.password}
                                 onChange={handleChange}

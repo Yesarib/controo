@@ -4,7 +4,7 @@ import Header from "@/sections/home/header";
 import Pricing from "@/sections/home/pricing";
 import Tools from "@/sections/home/tools";
 
-export default async function Home() {
+export default function Home() {
     return (
         <div className="w-full flex flex-col justify-center items-center">
             <Header />
