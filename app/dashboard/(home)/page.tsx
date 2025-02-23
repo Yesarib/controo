@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { ContentInput } from "@/components/content-input"
@@ -18,8 +17,10 @@ export default function DashboardPage() {
     if (!userId || isLoading) return;
 
     setIsLoading(true);
+    const words = message.split(' ').slice(0, 5).join(' '); 
+    const trimmedMessage = words.length > 50 ? words.slice(0, 50) + "..." : words;
 
-    const response = await newChat(userId, "new Title");
+    const response = await newChat(userId, trimmedMessage);
     if (!response?.id) {
       setIsLoading(false);
       return;
@@ -45,7 +46,7 @@ export default function DashboardPage() {
     const generatedContent = data[0].generated_text;
 
     const userRequestIndex = generatedContent.indexOf(`User request: "${message}"`);
-    const contentAfterUserInput = userRequestIndex !== -1 ? generatedContent.substring(userRequestIndex + `User request: ${message}`.length).trim() : generatedContent;
+    const contentAfterUserInput = userRequestIndex !== -1 ? generatedContent.substring(userRequestIndex + `User request: ${message} "`.length).trim() : generatedContent;
 
     await newMessage({ chat_id: newChatId, user_id: userId, content: contentAfterUserInput, user_message: message });
 
