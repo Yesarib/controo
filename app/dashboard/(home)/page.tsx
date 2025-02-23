@@ -8,17 +8,22 @@ import { useUser } from "@/hooks/use-user";
 import { newMessage } from "../supabase/message";
 import { useRouter } from "next/navigation";
 
-
 export default function DashboardPage() {
   const { userId } = useUser();
   const router = useRouter();
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleContent = async () => {
-    if (!userId) return;
+    if (!userId || isLoading) return;
+
+    setIsLoading(true);
 
     const response = await newChat(userId, "new Title");
-    if (!response?.id) return;
+    if (!response?.id) {
+      setIsLoading(false);
+      return;
+    }
 
     const newChatId = response.id;
 
@@ -29,8 +34,10 @@ export default function DashboardPage() {
       }, 
       body: JSON.stringify({ user_input: message })
     });
+
     if (!apiResponse.ok) {
       console.error('API isteği başarısız oldu');
+      setIsLoading(false);
       return;
     }
 
@@ -40,15 +47,15 @@ export default function DashboardPage() {
     const userRequestIndex = generatedContent.indexOf(`User request: "${message}"`);
     const contentAfterUserInput = userRequestIndex !== -1 ? generatedContent.substring(userRequestIndex + `User request: ${message}`.length).trim() : generatedContent;
 
-
     await newMessage({ chat_id: newChatId, user_id: userId, content: contentAfterUserInput, user_message: message });
 
+    setIsLoading(false);
     router.push(`/dashboard/chat/${newChatId}`);
   }
 
   return (
     <div className="w-full h-full flex justify-center items-center ">
-      <ContentInput setMessage={setMessage} handleSubmit={handleContent} />
+      <ContentInput setMessage={setMessage} handleSubmit={handleContent} isLoading={isLoading} />
     </div>
   )
 }
