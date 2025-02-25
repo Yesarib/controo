@@ -41,7 +41,7 @@ export async function signOut() {
 export async function checkUser(userId: string) {
     const supabase = await createClient();
 
-    const { data: user, error} = await supabase.from('user_profiles').select('*').eq('authId', userId);
+    const { data: user, error} = await supabase.from('user_profiles').select('*').eq('authid', userId);
 
     if (error) {
         console.error(error);
