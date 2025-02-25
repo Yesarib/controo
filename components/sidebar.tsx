@@ -57,6 +57,7 @@ export function Sidebar() {
     }, [userId, chatId]);
 
     const handleMenuOpen = (event: any, chatId: string) => {
+        event.preventDefault()
         setAnchorEl(event.currentTarget);
         setSelectedChatId(chatId);
     };
@@ -110,7 +111,7 @@ export function Sidebar() {
                 </Typography>
 
                 {loading ? (
-                    <Loading />
+                    <Loading isSidebar width="200" />
                 ) : (
                     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1, mt: 1 }}>
                         {chats.map((chat) => (
