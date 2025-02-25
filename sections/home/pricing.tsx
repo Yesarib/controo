@@ -82,7 +82,7 @@ export default function Pricing() {
         <div className="w-full flex flex-col justify-center items-center mt-24">
             <h1 className="font-montserrat font-bold text-5xl"> Pricing Plans</h1>
             <p className="mt-2 text-gray-600"> Pick the plan that works best for you! </p>
-            <div className="w-2/3 flex gap-8 mt-8 cursor-pointer">
+            <div className="w-full lg:w-2/3 block lg:flex gap-8 mt-8 cursor-pointer">
                 {pricingPlans.map((plan, index) => {
 
                     const isAnnual = plan.name === "Yearly";
