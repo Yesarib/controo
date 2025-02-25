@@ -18,7 +18,7 @@ export async function createClient() {
                 async set(name: string, value: string, options: CookieOptions) {
                     try {
                         (await cookieStore).set({ name, value, ...options })
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     } catch (error) {
                         // The `set` method was called from a Server Component.
                         // This can be ignored if you have middleware refreshing
@@ -27,14 +27,16 @@ export async function createClient() {
                 },
                 async remove(name: string, options: CookieOptions) {
                     try {
-                        (await cookieStore).set({ name, value: '', ...options })
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        (await cookieStore).set({
+                            name,
+                            value: '',
+                            ...options,
+                            maxAge: -1
+                        })
                     } catch (error) {
-                        // The `delete` method was called from a Server Component.
-                        // This can be ignored if you have middleware refreshing
-                        // user sessions.
+                        console.error("Error removing cookie:", error);
                     }
-                },
+                }
             },
         }
     )
