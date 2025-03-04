@@ -9,8 +9,12 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata = {
   metadataBase: new URL(defaultUrl),
   title: "Contro | AI powered Contents",
-  description: "An example of Supabase, Auth and NextJS server actions",
+  description: "Contro offers a range of powerful tools to assist content creators and digital marketers, from content generation to image analysis. It provides innovative solutions for blog posts, social media content, and SEO optimization.",
+  icons: {
+    icon: "/monogram-16px.png",
+  },
 };
+
 
 export default function RootLayout({
   children,

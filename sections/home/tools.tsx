@@ -17,7 +17,8 @@ function OurTools() {
         "Write social media captions and ads.",
         "SEO optimization for better reach."
       ],
-      icon: <FileType2 size={32} />
+      icon: <FileType2 size={32} />,
+      comingSoon: false, // Bu özellik aktif
     },
     {
       value: "content-from-images",
@@ -29,7 +30,8 @@ function OurTools() {
         "Suggest captions or tags based on visual analysis.",
         "Generate stories or blog ideas inspired by the images."
       ],
-      icon: <BookImage size={32} />
+      icon: <BookImage size={32} />,
+      comingSoon: true, // Bu özellik çok yakında
     },
     {
       value: "content-categorisation",
@@ -41,7 +43,8 @@ function OurTools() {
         "Improve content discoverability with smart categorization.",
         "Customize categories based on your preferences."
       ],
-      icon: <SquareLibrary size={32} />
+      icon: <SquareLibrary size={32} />,
+      comingSoon: true, // Bu özellik çok yakında
     }
   ];
 
@@ -69,6 +72,9 @@ function OurTools() {
             <TabsContent key={tool.value} value={tool.value} className="p-4 sm:p-6 border border-gray-300 rounded-lg">
               <h1 className="font-montserrat font-bold text-xl sm:text-2xl"> {tool.title} </h1>
               <p className="text-gray-600 text-[14px] sm:text-[16px]"> {tool.desc} </p>
+              {tool.comingSoon && (
+                <p className="text-red-500 text-sm mt-2">This feature is coming soon!</p>
+              )}
               <Card className="bg-gray-900 p-4 mt-4">
                 <CardHeader>
                   <CardTitle className="text-green-500 text-[18px] sm:text-[20px]">{"What's this one doing?"}</CardTitle>
@@ -79,6 +85,9 @@ function OurTools() {
                       <li key={index} className="my-2">{feature}</li>
                     ))}
                   </ul>
+                  {tool.comingSoon && (
+                    <p className="text-red-500 text-sm mt-2">This feature is coming soon!</p>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
@@ -89,9 +98,12 @@ function OurTools() {
       {/* Small screens: Stacked layout */}
       <div className="w-full lg:hidden flex flex-col justify-center items-center">
         {tools.map((tool) => (
-          <div key={tool.value} className="w-full  p-4 sm:p-6 border border-gray-300 rounded-lg mt-4">
+          <div key={tool.value} className="w-full p-4 sm:p-6 border border-gray-300 rounded-lg mt-4">
             <h1 className="font-montserrat font-bold text-xl sm:text-2xl"> {tool.title} </h1>
             <p className="text-gray-600 text-[14px] sm:text-[16px]"> {tool.desc} </p>
+            {tool.comingSoon && (
+              <p className="text-red-500 text-sm mt-2">This feature is coming soon!</p>
+            )}
             <Card className="bg-gray-900 p-4 mt-4">
               <CardHeader>
                 <CardTitle className="text-green-500 text-[18px] sm:text-[20px]">{"What's this one doing?"}</CardTitle>
@@ -102,6 +114,9 @@ function OurTools() {
                     <li key={index} className="my-2">{feature}</li>
                   ))}
                 </ul>
+                {tool.comingSoon && (
+                  <p className="text-red-500 text-sm mt-2">This feature is coming soon!</p>
+                )}
               </CardContent>
             </Card>
           </div>

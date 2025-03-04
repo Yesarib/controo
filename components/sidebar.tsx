@@ -13,6 +13,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { LogOut } from 'lucide-react';
 import { signOut } from '@/app/(home)/login/action';
 import Loading from './loading';
+import Image from 'next/image';
 
 interface Chat {
     id: string;
@@ -40,7 +41,7 @@ export function Sidebar() {
         }
 
         const response = await getUserChats(userId);
-        
+
         if (!response || !Array.isArray(response)) {
             console.log('Invalid response from Supabase:', response);
             setChats([]);
@@ -91,11 +92,12 @@ export function Sidebar() {
                     height: '100vh',
                 }}
             >
-                <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
-                    Contro
-                </Typography>
 
-                <Button fullWidth sx={{ textTransform: 'capitalize', borderRadius: '12px', color: 'white', display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                <div className='flex justify-center items-center'>
+                    <Image src={'/logo-no-background.png'} alt="logo" width={120} height={100} />
+                </div>
+                
+                <Button fullWidth sx={{ textTransform: 'capitalize', borderRadius: '12px', color: 'white', display: 'flex', justifyContent: 'start', alignItems: 'center', mt: 8 }}>
                     <Add sx={{ mr: 1 }} fontSize='small' />
                     <Link href={'/dashboard'}>
                         <Typography variant="body2" gutterBottom sx={{ color: 'white', mt: 1 }}>
